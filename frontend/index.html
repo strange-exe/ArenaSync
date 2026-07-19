@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArenaSync AI - FIFA World Cup 2026 Smart Stadium & Operations Hub</title>
+    <!-- Google Fonts: Outfit for headers, Inter for interface text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- GLOBAL APP HEADER -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 100 100" class="stadium-logo">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="var(--primary)" stroke-width="6" />
+                        <ellipse cx="50" cy="50" rx="30" ry="15" fill="none" stroke="var(--accent)" stroke-width="4" transform="rotate(-30 50 50)" />
+                        <ellipse cx="50" cy="50" rx="30" ry="15" fill="none" stroke="var(--accent)" stroke-width="4" transform="rotate(30 50 50)" />
+                        <circle cx="50" cy="50" r="8" fill="var(--primary)" />
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>ArenaSync <span class="badge-ai">AI</span></h1>
+                    <p class="subtitle">FIFA World Cup 2026 Operations & Fan Intelligence</p>
+                </div>
+            </div>
+
+            <!-- Global Stats & Match Ticker -->
+            <div class="header-ticker">
+                <div class="ticker-item live">
+                    <span class="pulse-indicator"></span>
+                    <span class="ticker-label">LIVE MATCH:</span>
+                    <span class="ticker-value">USA 2 - 1 MEX (78')</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-label">STADIUM TEMP:</span>
+                    <span class="ticker-value">24°C / 75°F</span>
+                </div>
+                <div class="ticker-item">
+                    <span class="ticker-label">ATTENDANCE:</span>
+                    <span class="ticker-value" id="header-attendance">82,450 / 82,500</span>
+                </div>
+            </div>
+
+            <!-- Control Actions -->
+            <div class="header-controls">
+                <div class="select-wrapper">
+                    <select id="stadium-select" class="control-select" aria-label="Select host stadium">
+                        <option value="metlife">MetLife Stadium (East Rutherford)</option>
+                        <option value="sofi">SoFi Stadium (Los Angeles)</option>
+                        <option value="azteca">Estadio Azteca (Mexico City)</option>
+                    </select>
+                </div>
+                
+                <!-- View Toggle Slider -->
+                <div class="view-toggle">
+                    <button id="toggle-fan" class="toggle-btn active" data-view="fan">
+                        <i data-lucide="users" class="icon"></i>
+                        Fan Hub
+                    </button>
+                    <button id="toggle-ops" class="toggle-btn" data-view="ops">
+                        <i data-lucide="shield" class="icon"></i>
+                        Ops Command
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT VIEWER -->
+        <main class="app-main">
+            
+            <!-- SECTION 1: FAN EXPERIENCE HUB -->
+            <section id="view-fan" class="view-panel active-view">
+                <div class="grid-layout fan-grid">
+                    
+                    <!-- Left Column: GenAI Chat Companion -->
+                    <div class="panel chatbot-panel">
+                        <div class="panel-header">
+                            <div class="title-with-icon">
+                                <div class="icon-bg primary-bg">
+                                    <i data-lucide="message-square" class="icon"></i>
+                                </div>
+                                <div>
+                                    <h3>ArenaAI Assistant</h3>
+                                    <span class="status-indicator online">GenAI Matchday Guide</span>
+                                </div>
+                            </div>
+                            <!-- Language Selector -->
+                            <div class="lang-select">
+                                <select id="assistant-lang" class="small-select" aria-label="Select assistant language">
+                                    <option value="en">🇺🇸 EN</option>
+                                    <option value="es">🇲🇽 ES</option>
+                                    <option value="fr">🇫🇷 FR</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-body chat-container">
+                            <div class="chat-feed" id="chat-feed" aria-live="polite">
+                                <div class="chat-message bot">
+                                    <div class="message-bubble">
+                                        <p>Welcome to <strong>MetLife Stadium</strong>! I am your AI Matchday Companion. 🏟️</p>
+                                        <p>I can help you with live directions, transit shuttles, restrooms, accessibility access, or today's sustainability initiatives. What are you looking for?</p>
+                                    </div>
+                                    <span class="message-meta">ArenaAI • Just now</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Action Chips -->
+                            <div class="quick-chips">
+                                <button class="chip-btn" data-query="Find nearest wheelchair restroom">♿ Accessible Restroom</button>
+                                <button class="chip-btn" data-query="How to get to Gate A from Section 112">🚶 Gate A Route</button>
+                                <button class="chip-btn" data-query="Are there vegan food concessions?">🥗 Vegan Options</button>
+                                <button class="chip-btn" data-query="Where is the rideshare pickup?">🚗 Ride Share</button>
+                                <button class="chip-btn" data-query="Tell me about the stadium water conservation">💧 Eco-Features</button>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-footer chat-input-bar">
+                            <button id="voice-btn" class="icon-btn voice-inactive" title="Speak to ArenaAI" aria-label="Speak to ArenaAI">
+                                <i data-lucide="mic" class="icon"></i>
+                            </button>
+                            <input type="text" id="chat-input" placeholder="Ask ArenaAI or speak..." aria-label="Chat input">
+                            <button id="send-btn" class="primary-btn" aria-label="Send message">
+                                <i data-lucide="send" class="icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Center Column: Interactive Stadium Map -->
+                    <div class="panel map-panel">
+                        <div class="panel-header map-header">
+                            <div class="title-with-icon">
+                                <div class="icon-bg accent-bg">
+                                    <i data-lucide="map" class="icon"></i>
+                                </div>
+                                <div>
+                                    <h3>Interactive Stadium Map</h3>
+                                    <span class="subtitle">Select gate or section for live wait times and navigation</span>
+                                </div>
+                            </div>
+                            <div class="map-modes">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="accessibility-filter">
+                                    <span class="checkmark"></span>
+                                    ♿ Accessibility Mode
+                                </label>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="crowd-density-layer" checked>
+                                    <span class="checkmark"></span>
+                                    🔥 Density Heatmap
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="panel-body map-body">
+                            <!-- SVG Map Container -->
+                            <div class="stadium-map-wrapper">
+                                <div class="map-controls">
+                                    <button class="zoom-btn" id="zoom-in" title="Zoom In" aria-label="Zoom In"><i data-lucide="zoom-in" class="icon"></i></button>
+                                    <button class="zoom-btn" id="zoom-out" title="Zoom Out" aria-label="Zoom Out"><i data-lucide="zoom-out" class="icon"></i></button>
+                                    <button class="zoom-btn" id="zoom-reset" title="Reset View" aria-label="Reset View"><i data-lucide="rotate-ccw" class="icon"></i></button>
+                                </div>
+                                <div class="map-navigation-hud" style="position: absolute; bottom: 15px; left: 15px; z-index: 10; background: rgba(1, 4, 3, 0.78); border: 1px solid rgba(34, 211, 238, 0.25); border-radius: 6px; padding: 8px 12px; font-size: 0.72rem; display: flex; flex-direction: column; gap: 6px; color: var(--text-secondary); pointer-events: none; backdrop-filter: blur(4px);">
+                                    <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="mouse-pointer" style="width: 12px; height: 12px; color: var(--accent);"></i> Left Click + Drag to Rotate</span>
+                                    <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="move" style="width: 12px; height: 12px; color: var(--accent);"></i> Right Click + Drag to Pan</span>
+                                    <span style="display: flex; align-items: center; gap: 8px;"><i data-lucide="zoom-in" style="width: 12px; height: 12px; color: var(--accent);"></i> Scroll to Zoom</span>
+                                </div>
+                                <div class="svg-container" id="svg-zoom-pan-container" style="width: 100%; height: 100%; position: relative; overflow: hidden;">
+                                    <div id="stadium-3d-canvas" style="width: 100%; height: 100%;"></div>
+                                    <!-- Map Tooltip (Glass Overlay) -->
+                                    <div id="map-tooltip" class="map-tooltip glass-tooltip hidden">
+                                        <h4 id="tooltip-title">Section Name</h4>
+                                        <div class="tooltip-body">
+                                            <div class="tooltip-row">
+                                                <span class="label">Wait Time:</span>
+                                                <span class="value" id="tooltip-wait">-</span>
+                                            </div>
+                                            <div class="tooltip-row">
+                                                <span class="label">Crowd Status:</span>
+                                                <span class="value" id="tooltip-status">-</span>
+                                            </div>
+                                            <div class="tooltip-row" id="tooltip-extra-row">
+                                                <span class="label" id="tooltip-extra-label">Facilities:</span>
+                                                <span class="value" id="tooltip-extra-value">-</span>
+                                            </div>
+                                        </div>
+                                        <div class="tooltip-footer">
+                                            <button class="small-btn primary-btn" id="tooltip-btn-route">Get Route Here</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Sustainability & Live Stats -->
+                    <div class="panel side-info-panel">
+                        <!-- Stats Mini Widget -->
+                        <div class="info-section">
+                            <h3>Live Wait Times</h3>
+                            <div class="wait-list">
+                                <div class="wait-item">
+                                    <div class="wait-meta">
+                                        <span class="badge red-bg">Gate C</span>
+                                        <span class="text-secondary">Main South-East Entrance</span>
+                                    </div>
+                                    <div class="wait-time text-danger">28 mins</div>
+                                </div>
+                                <div class="wait-item">
+                                    <div class="wait-meta">
+                                        <span class="badge yellow-bg">Gate B</span>
+                                        <span class="text-secondary">North-East Entrance</span>
+                                    </div>
+                                    <div class="wait-time text-warning">15 mins</div>
+                                </div>
+                                <div class="wait-item">
+                                    <div class="wait-meta">
+                                        <span class="badge purple-bg">Grill & Tacos</span>
+                                        <span class="text-secondary">East Concourse</span>
+                                    </div>
+                                    <div class="wait-time text-warning">20 mins</div>
+                                </div>
+                                <div class="wait-item">
+                                    <div class="wait-meta">
+                                        <span class="badge green-bg">Gate D</span>
+                                        <span class="text-secondary">South-West Entrance</span>
+                                    </div>
+                                    <div class="wait-time text-success">2 mins</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sustainability Calculator & Gamification -->
+                        <div class="info-section border-top">
+                            <div class="title-with-icon">
+                                <div class="icon-bg green-bg">
+                                    <i data-lucide="leaf" class="icon"></i>
+                                </div>
+                                <h3>Green Matchday Footprint</h3>
+                            </div>
+                            <p class="section-desc">Offset carbon and win an ArenaSync Eco-Badge!</p>
+                            
+                            <form id="sustainability-form" class="eco-form">
+                                <div class="form-group">
+                                    <label>Transportation Mode</label>
+                                    <select id="eco-transport" class="control-select">
+                                        <option value="transit">Mass Transit / Shuttle (0.1 kg CO2)</option>
+                                        <option value="rideshare">Rideshare / Carpool (1.5 kg CO2)</option>
+                                        <option value="drive">Drive Alone (4.2 kg CO2)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Concession Meal Selection</label>
+                                    <select id="eco-food" class="control-select">
+                                        <option value="vegan">Plant-based / Vegan (0.2 kg CO2)</option>
+                                        <option value="chicken">Poultry / Vegetarian (1.1 kg CO2)</option>
+                                        <option value="beef">Beef Burger / Hotdog (3.8 kg CO2)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-container text-secondary">
+                                        <input type="checkbox" id="eco-recycling" checked>
+                                        <span class="checkmark"></span>
+                                        I committed to using recycling bins
+                                    </label>
+                                </div>
+                                <button type="button" id="calculate-eco" class="primary-btn w-full">Calculate Footprint</button>
+                            </form>
+                            
+                            <!-- Footprint Result Box -->
+                            <div id="eco-result" class="eco-result-box hidden">
+                                <div class="result-details">
+                                    <div class="metric">
+                                        <span class="num" id="eco-value">0.3</span>
+                                        <span class="unit">kg CO2e</span>
+                                    </div>
+                                    <div class="badge-earned">
+                                        <span class="badge-title">Eco-Status</span>
+                                        <span id="eco-badge-name" class="badge-tag green-badge">Eco Hero</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-fill" id="eco-progress" style="width: 85%;"></div>
+                                </div>
+                                <p class="eco-suggestion" id="eco-tip">Awesome! You saved 5.2kg of CO2 compared to standard travel.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            
+            <!-- SECTION 2: OPERATIONS & VOLUNTEER COMMAND -->
+            <section id="view-ops" class="view-panel">
+                <div class="grid-layout ops-grid">
+                    
+                    <!-- Left Column: Operations Telemetry & Controls -->
+                    <div class="panel telemetry-panel">
+                        <div class="panel-header">
+                            <div class="title-with-icon">
+                                <div class="icon-bg red-bg">
+                                    <i data-lucide="activity" class="icon"></i>
+                                </div>
+                                <h3>Operational Telemetry</h3>
+                            </div>
+                            <span class="live-tag">LIVE FEED</span>
+                        </div>
+                        
+                        <div class="panel-body">
+                            <!-- Live Metric Indicators Grid -->
+                            <div class="telemetry-grid">
+                                <div class="metric-card">
+                                    <span class="label">Total Inflow Rate</span>
+                                    <div class="value-row">
+                                        <span class="value text-success" id="telemetry-inflow">485</span>
+                                        <span class="unit">fans/min</span>
+                                    </div>
+                                    <span class="trend text-success">↑ 4.2% from peak</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="label">Concession Wait Avg</span>
+                                    <div class="value-row">
+                                        <span class="value text-warning" id="telemetry-wait">13.5</span>
+                                        <span class="unit">mins</span>
+                                    </div>
+                                    <span class="trend text-warning">↑ 1.5m increase</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="label">Active Volunteers</span>
+                                    <div class="value-row">
+                                        <span class="value text-primary" id="telemetry-volunteers">84 / 120</span>
+                                        <span class="unit">deployed</span>
+                                    </div>
+                                    <span class="trend text-secondary">36 standby</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="label">Sustainability Offset</span>
+                                    <div class="value-row">
+                                        <span class="value text-success" id="telemetry-co2">14,240</span>
+                                        <span class="unit">kg CO2</span>
+                                    </div>
+                                    <span class="trend text-success">Goal: 15k kg</span>
+                                </div>
+                            </div>
+
+                            <!-- Live Telemetry Graph Widget -->
+                            <div class="chart-container-widget">
+                                <div class="chart-header">
+                                    <h4>Crowd Entry Peak Activity</h4>
+                                    <span class="text-secondary font-mono">19:00 - 20:00 EST</span>
+                                </div>
+                                <div class="bar-chart" id="ops-telemetry-chart">
+                                    <!-- Dynamic bars rendered via CSS/JS -->
+                                    <div class="bar-col"><div class="bar-fill" style="height: 40%"></div><span class="bar-label">19:00</span></div>
+                                    <div class="bar-col"><div class="bar-fill" style="height: 55%"></div><span class="bar-label">19:10</span></div>
+                                    <div class="bar-col"><div class="bar-fill" style="height: 70%"></div><span class="bar-label">19:20</span></div>
+                                    <div class="bar-col"><div class="bar-fill" style="height: 95%"></div><span class="bar-label">19:30</span></div>
+                                    <div class="bar-col"><div class="bar-fill" style="height: 85%"></div><span class="bar-label">19:40</span></div>
+                                    <div class="bar-col"><div class="bar-fill" style="height: 65%"></div><span class="bar-label">19:50</span></div>
+                                    <div class="bar-col"><div class="bar-fill" id="dynamic-bar" style="height: 50%"></div><span class="bar-label">Now</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Simulated Manual Incident Trigger -->
+                        <div class="panel-footer border-top incident-form-footer">
+                            <h4>Simulation Controls: Trigger Incident</h4>
+                            <form id="incident-form" class="incident-grid-form">
+                                <div class="form-group">
+                                    <label>Incident Type</label>
+                                    <select id="inc-type" class="control-select">
+                                        <option value="crowd">Crowd Bottleneck</option>
+                                        <option value="medical">Medical Emergency</option>
+                                        <option value="facility">Scanner Failure / Power Outage</option>
+                                        <option value="spill">Restroom Spill / Slip Hazard</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location (Section)</label>
+                                    <select id="inc-location" class="control-select">
+                                        <option value="sector-north">North Stand (Sec 100-112)</option>
+                                        <option value="sector-east">East Stand (Sec 113-125)</option>
+                                        <option value="sector-south">South Stand (Sec 126-138)</option>
+                                        <option value="sector-west">West Stand (Sec 139-150)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Severity</label>
+                                    <select id="inc-severity" class="control-select">
+                                        <option value="low">Minor (Notice)</option>
+                                        <option value="medium">Moderate (Warning)</option>
+                                        <option value="high">Critical (Action Required)</option>
+                                    </select>
+                                </div>
+                                <button type="button" id="trigger-incident-btn" class="danger-btn w-full">Deploy Incident</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Center Column: Incident & AI Decision Console -->
+                    <div class="panel incidents-console-panel">
+                        <div class="panel-header">
+                            <div class="title-with-icon">
+                                <div class="icon-bg accent-bg">
+                                    <i data-lucide="alert-triangle" class="icon"></i>
+                                </div>
+                                <div>
+                                    <h3>GenAI Smart Operations Console</h3>
+                                    <span class="status-indicator online">Decision Support Engaged</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body console-body-split">
+                            <!-- Left Sub-panel: Active Incidents List -->
+                            <div class="incidents-list-panel">
+                                <h4>Active Incidents (<span id="incident-count">2</span>)</h4>
+                                <div class="incident-list-wrapper" id="incidents-list">
+                                    <!-- Incident Item 1 -->
+                                    <div class="incident-item critical active" data-id="inc-1">
+                                        <div class="incident-item-header">
+                                            <span class="badge red-bg font-mono">INC-1082</span>
+                                            <span class="incident-time">2 mins ago</span>
+                                        </div>
+                                        <h5>Scanner Malfunction at Gate C</h5>
+                                        <p class="description">Turnstiles 4 and 5 offline. Accumulating crowd bottleneck; inflow rate dropped 40%.</p>
+                                        <div class="incident-meta">
+                                            <span>Loc: Gate C (South-East)</span>
+                                            <span class="severity-tag crit">CRITICAL</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Incident Item 2 -->
+                                    <div class="incident-item warning" data-id="inc-2">
+                                        <div class="incident-item-header">
+                                            <span class="badge yellow-bg font-mono">INC-1083</span>
+                                            <span class="incident-time">10 mins ago</span>
+                                        </div>
+                                        <h5>Slip Hazard (Liquid Spill)</h5>
+                                        <p class="description">Large beverage spill reported in concourse section 122. Risk of fan slip.</p>
+                                        <div class="incident-meta">
+                                            <span>Loc: East Concourse</span>
+                                            <span class="severity-tag warn">WARNING</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Sub-panel: AI Recommendation Engine -->
+                            <div class="ai-recommendation-panel" id="ai-recommender">
+                                <div class="ai-recommender-header">
+                                    <div class="ai-avatar">
+                                        <svg viewBox="0 0 100 100" class="ai-pulse-logo">
+                                            <circle cx="50" cy="50" r="45" fill="none" stroke="var(--accent)" stroke-width="4" />
+                                            <path d="M25 50 Q40 20 50 50 T75 50" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4>AI Action Planner</h4>
+                                        <span class="subtext">Select an incident to generate action plan</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="ai-recommender-body" id="ai-recommender-body" aria-live="polite">
+                                    <div class="no-selection-placeholder">
+                                        <i data-lucide="info" class="icon opacity-20" style="width: 48px; height: 48px;"></i>
+                                        <p>Select an active incident from the list to analyze real-time stadium metrics and formulate a GenAI resolution plan.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Volunteer Staff Management -->
+                    <div class="panel staff-panel">
+                        <div class="panel-header">
+                            <div class="title-with-icon">
+                                <div class="icon-bg primary-bg">
+                                    <i data-lucide="users" class="icon"></i>
+                                </div>
+                                <div>
+                                    <h3>Volunteer Live Dispatch</h3>
+                                    <span class="subtitle">Deploy available volunteers matching task requirements</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body staff-body">
+                            <div class="staff-summary-row">
+                                <div class="stat-badge"><span class="num text-success" id="volunteers-avail">36</span> Standby</div>
+                                <div class="stat-badge"><span class="num text-warning" id="volunteers-busy">84</span> Active</div>
+                            </div>
+
+                            <div class="staff-list" id="volunteers-list">
+                                <!-- Volunteer 1 -->
+                                <div class="volunteer-row" data-name="Mateo Ramos" data-lang="ES, EN" data-specialty="Crowd Control">
+                                    <div class="vol-profile">
+                                        <div class="vol-avatar-init">MR</div>
+                                        <div class="vol-details">
+                                            <span class="vol-name">Mateo Ramos</span>
+                                            <span class="vol-meta">ES, EN • Crowd Control Specialist</span>
+                                        </div>
+                                    </div>
+                                    <div class="vol-status-badge status-available">STANDBY</div>
+                                </div>
+                                
+                                <!-- Volunteer 2 -->
+                                <div class="volunteer-row" data-name="Chloe Dubois" data-lang="FR, EN" data-specialty="First Aid">
+                                    <div class="vol-profile">
+                                        <div class="vol-avatar-init">CD</div>
+                                        <div class="vol-details">
+                                            <span class="vol-name">Chloe Dubois</span>
+                                            <span class="vol-meta">FR, EN • First Aid Cert.</span>
+                                        </div>
+                                    </div>
+                                    <div class="vol-status-badge status-available">STANDBY</div>
+                                </div>
+
+                                <!-- Volunteer 3 -->
+                                <div class="volunteer-row" data-name="Aoki Kenji" data-lang="JP, EN" data-specialty="Guest Relations">
+                                    <div class="vol-profile">
+                                        <div class="vol-avatar-init">AK</div>
+                                        <div class="vol-details">
+                                            <span class="vol-name">Aoki Kenji</span>
+                                            <span class="vol-meta">JP, EN • Multilingual Info</span>
+                                        </div>
+                                    </div>
+                                    <div class="vol-status-badge status-available">STANDBY</div>
+                                </div>
+
+                                <!-- Volunteer 4 -->
+                                <div class="volunteer-row" data-name="Sarah Jenkins" data-lang="EN" data-specialty="Technical Staff">
+                                    <div class="vol-profile">
+                                        <div class="vol-avatar-init">SJ</div>
+                                        <div class="vol-details">
+                                            <span class="vol-name">Sarah Jenkins</span>
+                                            <span class="vol-meta">EN • Tech & Scanner Ops</span>
+                                        </div>
+                                    </div>
+                                    <div class="vol-status-badge status-available">STANDBY</div>
+                                </div>
+
+                                <!-- Volunteer 5 -->
+                                <div class="volunteer-row" data-name="Lars Lindstrom" data-lang="DE, EN" data-specialty="Crowd Control">
+                                    <div class="vol-profile">
+                                        <div class="vol-avatar-init">LL</div>
+                                        <div class="vol-details">
+                                            <span class="vol-name">Lars Lindstrom</span>
+                                            <span class="vol-meta">DE, EN • Logistics Liaison</span>
+                                        </div>
+                                    </div>
+                                    <div class="vol-status-badge status-busy">ON MISSION (SEC 112)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
