@@ -213,3 +213,77 @@ test('Security Headers Verification', async (t) => {
         assert.ok(res.headers['content-security-policy']);
     });
 });
+
+test('Incident Validation and Resolution Edge Cases', async (t) => {
+    await t.test('POST /api/incidents - fails with missing title', async () => {
+        const res = await makeRequest('POST', '/api/incidents', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            location: 'gate-a'
+        });
+        assert.strictEqual(res.statusCode, 400);
+    });
+
+    await t.test('POST /api/incidents/:id/resolve - fails with non-existent ID', async () => {
+        const res = await makeRequest('POST', '/api/incidents/nonexistent-id-xyz/resolve', {
+            'Authorization': `Bearer ${token}`
+        });
+        assert.strictEqual(res.statusCode, 404);
+    });
+});
+
+test('Volunteer Dispatching & Role Access Verification', async (t) => {
+    let volunteerToken;
+
+    // Login as a volunteer (Mateo)
+    await t.test('POST /api/auth/login - succeeds with volunteer credentials', async () => {
+        const res = await makeRequest('POST', '/api/auth/login', {}, {
+            email: 'mateo@arenasync.com',
+            password: 'SecretWord2026!'
+        });
+        assert.strictEqual(res.statusCode, 200);
+        assert.ok(res.body.accessToken);
+        volunteerToken = res.body.accessToken;
+    });
+
+    await t.test('POST /api/dispatch - fails with missing parameters', async () => {
+        const res = await makeRequest('POST', '/api/dispatch', {
+            'Authorization': `Bearer ${token}` // admin
+        }, {
+            volunteerId: 'vol-1'
+        });
+        assert.strictEqual(res.statusCode, 400);
+    });
+
+    await t.test('POST /api/dispatch - fails with non-existent volunteer', async () => {
+        const res = await makeRequest('POST', '/api/dispatch', {
+            'Authorization': `Bearer ${token}` // admin
+        }, {
+            volunteerId: 'nonexistent-vol',
+            incidentId: 'inc-1'
+        });
+        assert.strictEqual(res.statusCode, 404);
+    });
+
+    await t.test('POST /api/dispatch - fails for volunteer role (Forbidden)', async () => {
+        const res = await makeRequest('POST', '/api/dispatch', {
+            'Authorization': `Bearer ${volunteerToken}` // volunteer
+        }, {
+            volunteerId: 'vol-1',
+            incidentId: 'inc-1'
+        });
+        assert.strictEqual(res.statusCode, 403);
+    });
+
+    await t.test('POST /api/dispatch - succeeds for admin role', async () => {
+        const res = await makeRequest('POST', '/api/dispatch', {
+            'Authorization': `Bearer ${token}` // admin
+        }, {
+            volunteerId: 'vol-1',
+            incidentId: 'inc-1'
+        });
+        assert.strictEqual(res.statusCode, 200);
+        assert.strictEqual(res.body.status, 'Dispatched');
+    });
+});
+

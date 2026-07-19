@@ -303,13 +303,17 @@ document.addEventListener("DOMContentLoaded", () => {
         state.currentView = view;
         if (view === "fan") {
             dom.toggleFan.classList.add("active");
+            dom.toggleFan.setAttribute("aria-selected", "true");
             dom.toggleOps.classList.remove("active");
+            dom.toggleOps.setAttribute("aria-selected", "false");
             dom.viewFan.classList.add("active-view");
             dom.viewOps.classList.remove("active-view");
             showToast("View Switched", "Entered Fan Experience Matchday Hub.", "success");
         } else {
             dom.toggleFan.classList.remove("active");
+            dom.toggleFan.setAttribute("aria-selected", "false");
             dom.toggleOps.classList.add("active");
+            dom.toggleOps.setAttribute("aria-selected", "true");
             dom.viewFan.classList.remove("active-view");
             dom.viewOps.classList.add("active-view");
             showToast("View Switched", "Entered Stadium Command & Control Room.", "warning");

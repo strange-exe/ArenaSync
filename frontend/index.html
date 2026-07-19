@@ -57,12 +57,12 @@
                 </div>
                 
                 <!-- View Toggle Slider -->
-                <div class="view-toggle">
-                    <button id="toggle-fan" class="toggle-btn active" data-view="fan">
+                <div class="view-toggle" role="tablist" aria-label="Application View Switcher">
+                    <button id="toggle-fan" class="toggle-btn active" data-view="fan" role="tab" aria-selected="true" aria-controls="view-fan">
                         <i data-lucide="users" class="icon"></i>
                         Fan Hub
                     </button>
-                    <button id="toggle-ops" class="toggle-btn" data-view="ops">
+                    <button id="toggle-ops" class="toggle-btn" data-view="ops" role="tab" aria-selected="false" aria-controls="view-ops">
                         <i data-lucide="shield" class="icon"></i>
                         Ops Command
                     </button>
@@ -246,7 +246,7 @@
                             
                             <form id="sustainability-form" class="eco-form">
                                 <div class="form-group">
-                                    <label>Transportation Mode</label>
+                                    <label for="eco-transport">Transportation Mode</label>
                                     <select id="eco-transport" class="control-select">
                                         <option value="transit">Mass Transit / Shuttle (0.1 kg CO2)</option>
                                         <option value="rideshare">Rideshare / Carpool (1.5 kg CO2)</option>
@@ -254,7 +254,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Concession Meal Selection</label>
+                                    <label for="eco-food">Concession Meal Selection</label>
                                     <select id="eco-food" class="control-select">
                                         <option value="vegan">Plant-based / Vegan (0.2 kg CO2)</option>
                                         <option value="chicken">Poultry / Vegetarian (1.1 kg CO2)</option>
@@ -371,7 +371,7 @@
                             <h4>Simulation Controls: Trigger Incident</h4>
                             <form id="incident-form" class="incident-grid-form">
                                 <div class="form-group">
-                                    <label>Incident Type</label>
+                                    <label for="inc-type">Incident Type</label>
                                     <select id="inc-type" class="control-select">
                                         <option value="crowd">Crowd Bottleneck</option>
                                         <option value="medical">Medical Emergency</option>
@@ -380,7 +380,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Location (Section)</label>
+                                    <label for="inc-location">Location (Section)</label>
                                     <select id="inc-location" class="control-select">
                                         <option value="sector-north">North Stand (Sec 100-112)</option>
                                         <option value="sector-east">East Stand (Sec 113-125)</option>
@@ -389,7 +389,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Severity</label>
+                                    <label for="inc-severity">Severity</label>
                                     <select id="inc-severity" class="control-select">
                                         <option value="low">Minor (Notice)</option>
                                         <option value="medium">Moderate (Warning)</option>
