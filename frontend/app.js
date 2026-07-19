@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Setup Three.js Scene
         scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x010403); // Match charcoal background
+        scene.background = new THREE.Color(0x08080a); // Match Slash Obsidian background
 
         // Camera
         camera = new THREE.PerspectiveCamera(40, canvasContainer.clientWidth / canvasContainer.clientHeight, 0.1, 1000);
@@ -399,13 +399,13 @@ document.addEventListener("DOMContentLoaded", () => {
         dirLight.shadow.bias = -0.001;
         scene.add(dirLight);
 
-        // Add soft green glow pointlight in the pitch center
-        const pitchLight = new THREE.PointLight(0x10b981, 1.2, 20);
+        // Add soft copper glow pointlight in the pitch center
+        const pitchLight = new THREE.PointLight(0xcc9166, 1.2, 20);
         pitchLight.position.set(0, 1, 0);
         scene.add(pitchLight);
 
-        // Add cyber turf grid helper (professional modern stadium grid lines)
-        const gridHelper = new THREE.GridHelper(30, 30, 0x10b981, 0x1f2937);
+        // Add cyber turf grid helper (gilded gold & graphite stadium lines)
+        const gridHelper = new THREE.GridHelper(30, 30, 0xcc9166, 0x1c1d22);
         gridHelper.position.y = -0.05;
         gridHelper.material.opacity = 0.15;
         gridHelper.material.transparent = true;
@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             // Lower tier
             const tier1Mat = new THREE.MeshStandardMaterial({
-                color: 0x1e293b,
+                color: 0x1c1d22, // Slash Graphite
                 roughness: 0.6,
                 metalness: 0.1
             });
@@ -567,7 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 sec.size[2] * 0.7
             );
             const tier2Mat = new THREE.MeshStandardMaterial({
-                color: 0x0f172a,
+                color: 0x121317, // Slash Carbon
                 roughness: 0.6,
                 metalness: 0.1
             });
@@ -866,7 +866,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Render glowing tube for 3D neon pipeway
         const tubeGeom = new THREE.TubeGeometry(curve, 64, 0.12, 8, false);
         const tubeMat = new THREE.MeshBasicMaterial({
-            color: 0xf59e0b, // Amber gold neon
+            color: 0xae9357, // Slash Gilded Gold
             transparent: true,
             opacity: 0.8
         });
@@ -877,13 +877,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Highlight start/end points with glowing rings
         const ringGeom = new THREE.RingGeometry(0.18, 0.3, 16);
         
-        const startRingMat = new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide });
+        const startRingMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }); // Slash Paper White
         const startRing = new THREE.Mesh(ringGeom, startRingMat);
         startRing.position.copy(start3D).y += 0.05;
         startRing.rotation.x = Math.PI / 2;
         wayfinding3DLine.add(startRing);
 
-        const endRingMat = new THREE.MeshBasicMaterial({ color: 0xef4444, side: THREE.DoubleSide });
+        const endRingMat = new THREE.MeshBasicMaterial({ color: 0xcc9166, side: THREE.DoubleSide }); // Slash Copper
         const endRing = new THREE.Mesh(ringGeom, endRingMat);
         endRing.position.copy(end3D).y += 0.05;
         endRing.rotation.x = Math.PI / 2;
