@@ -154,6 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let stadiumMeshes = {};
     let coordinates3D = {};
     let wayfinding3DLine = null;
+    let cameraLerpTarget = new THREE.Vector3(0, 0, 0);
     let lastInteractionTime = Date.now();
     let resizeTimeout;
 
@@ -716,7 +717,6 @@ document.addEventListener("DOMContentLoaded", () => {
         showTooltipForElement(key);
     }
 
-    let cameraLerpTarget = new THREE.Vector3(0, 0, 0);
     function gsapCameraTo(x, z) {
         // Sets target lerp coordinates for camera orbit target
         cameraLerpTarget.set(x, 0, z);
