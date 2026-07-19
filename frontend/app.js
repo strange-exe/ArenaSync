@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    async function updateBackendTelemetry(inflowRate, avgWaitMinutes) {
+    async function updateBackendTelemetry(inflowRate, avgWaitMinutes, co2SavedKg) {
         if (!authToken) return;
         try {
             await fetch(`${API_BASE}/telemetry`, {
@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     'Authorization': `Bearer ${authToken}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ inflowRate, avgWaitMinutes })
+                body: JSON.stringify({ inflowRate, avgWaitMinutes, co2SavedKg })
             });
         } catch (err) {
             // silent fallback
@@ -1333,7 +1333,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 badge = "Eco Hero";
                 badgeClass = "badge-tag green-badge";
                 tip = `🏆 Excellent! Your carbon footprint is extremely low. You saved approx. 7.0kg CO2 compared to standard driving and beef meals!`;
-                // Add points to operational sustainability offset
+                // Add points to operational sustainability offset on the backend and frontend
+                updateBackendTelemetry(undefined, undefined, 5);
                 const currentOffset = parseInt(dom.telemetryCo2.innerText.replace(/,/g, ""));
                 dom.telemetryCo2.innerText = (currentOffset + 5).toLocaleString();
             } else if (score <= 3.0) {

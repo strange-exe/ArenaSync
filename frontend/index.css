@@ -178,6 +178,46 @@ body::before {
     background: var(--color-slate);
 }
 
+/* --- Skip Navigation Link (Accessibility) --- */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    z-index: 10000;
+    padding: 12px 24px;
+    background: var(--color-paper-white);
+    color: var(--color-obsidian);
+    font-family: var(--font-inter);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: var(--radius-buttons);
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 16px;
+    outline: 2px solid var(--color-copper);
+    outline-offset: 2px;
+}
+
+/* --- App Footer --- */
+.app-footer {
+    text-align: center;
+    padding: 20px 24px;
+    border-top: 1px solid var(--color-graphite);
+    color: var(--color-ash);
+    font-family: var(--font-inter);
+    font-size: 12px;
+    letter-spacing: -0.01em;
+}
+.app-footer p {
+    margin: 2px 0;
+}
+.footer-sub {
+    color: var(--color-smoke);
+    font-size: 11px;
+}
+
 /* --- Typography & Accents --- */
 h1,
 h2 {

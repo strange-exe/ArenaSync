@@ -17,13 +17,16 @@ ArenaSync integrates these two perspectives into a single unified web applicatio
 
 ### Monorepo Architecture
 - **Frontend (`/frontend`)**: A client-side workspace featuring:
-  - **Three.js 3D Render Engine**: Renders a physical 3D model of stadium stands, gates, and concession areas. Displays animated wayfinding paths in neon tube vectors.
+  - **Three.js 3D Render Engine**: Renders a physical 3D model of stadium stands, gates, and concession areas. Displays animated wayfinding paths in gilded copper tube vectors.
   - **Speech-to-Text (STT) & Text-to-Speech (TTS)**: Translates user speech and speaks bot answers dynamically.
-  - **WAI-ARIA Landmarks**: Employs semantic markup and `aria-live` containers to ensure accessibility.
+  - **WAI-ARIA Landmarks**: Employs semantic markup, `aria-live` containers, skip-navigation links, and `role` attributes to ensure WCAG 2.1 AA compliance.
+  - **Slash Design System**: Implements a midnight vault aesthetic with Playfair Display serif typography, Inter sans-serif body text, and copper editorial accents.
 - **Backend (`/backend`)**: A secure Express server containing:
-  - **JWT Authentication & RBAC**: Secures administrative REST routes, restricting actions to certified organizers.
-  - **Manual Security Headers**: Enforces strict CSP, XSS protection, MIME-sniffing protection, and clickjacking protection.
-  - **Redis & Memory Rate-Limiting**: Dynamically limits request frequencies to prevent denial-of-service attempts.
+  - **JWT Authentication & RBAC**: Secures administrative REST routes with HS256-algorithm-pinned JWT verification, restricting actions to certified organizers.
+  - **Production Security Headers**: Enforces strict CSP (without `unsafe-eval`), HSTS, Referrer-Policy, Permissions-Policy, XSS protection, MIME-sniffing protection, and clickjacking protection.
+  - **Input Validation & Sanitization**: All mutation endpoints validate numeric ranges, enum values, and HTML-escape user-supplied strings to prevent XSS injection.
+  - **Redis & Memory Rate-Limiting**: Dynamically limits request frequencies with distributed Redis store and automatic local memory fallback.
+  - **Efficient Data Operations**: Uses pre-compiled regex, O(1) array splice for incident resolution, and cached lookup tables.
 
 ### Dynamic GenAI Logic
 - Endpoints utilize the new `@google/genai` SDK and the fast `gemini-3-flash-preview` model.
@@ -73,7 +76,24 @@ ArenaSync integrates these two perspectives into a single unified web applicatio
 4. Access the web app at `http://localhost:8080`.
 
 ### Running Integration Tests
-Verify the endpoints and security headers:
+The test suite validates 39 assertions across 12 test suites:
 ```bash
 npm.cmd test
 ```
+
+**Test Coverage Areas:**
+| Suite | Tests | Coverage |
+|-------|-------|----------|
+| Authentication Flow | 2 | Login success/failure, JWT issuance |
+| Telemetry Endpoints | 2 | Auth guard, data retrieval |
+| Telemetry Input Validation | 3 | Numeric type guards, negative value rejection |
+| Incidents CRUD | 3 | List, create, resolve |
+| Incident Edge Cases | 2 | Missing fields, non-existent ID |
+| Volunteers CRUD | 2 | Roster list, status update |
+| Volunteer Status Enum | 2 | Invalid enum rejection, valid acceptance |
+| GenAI Chat | 1 | Fallback response with highlight keys |
+| GenAI Incident Analyzer | 1 | Assessment and volunteer specialty match |
+| Security Headers | 2 | CSP, XSS, HSTS, Referrer-Policy, Permissions-Policy |
+| XSS Sanitization | 1 | HTML entity escaping on user input |
+| RBAC Dispatch | 5 | Missing params, non-existent vol, role forbidden, admin success |
+

@@ -287,3 +287,84 @@ test('Volunteer Dispatching & Role Access Verification', async (t) => {
     });
 });
 
+test('Telemetry Input Validation', async (t) => {
+    await t.test('POST /api/telemetry - rejects non-numeric inflowRate', async () => {
+        const res = await makeRequest('POST', '/api/telemetry', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            inflowRate: 'not-a-number'
+        });
+        assert.strictEqual(res.statusCode, 400);
+        assert.ok(res.body.message.includes('inflowRate'));
+    });
+
+    await t.test('POST /api/telemetry - rejects negative avgWaitMinutes', async () => {
+        const res = await makeRequest('POST', '/api/telemetry', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            avgWaitMinutes: -5
+        });
+        assert.strictEqual(res.statusCode, 400);
+        assert.ok(res.body.message.includes('avgWaitMinutes'));
+    });
+
+    await t.test('POST /api/telemetry - accepts valid numeric inputs', async () => {
+        const res = await makeRequest('POST', '/api/telemetry', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            inflowRate: 500,
+            avgWaitMinutes: 12
+        });
+        assert.strictEqual(res.statusCode, 200);
+        assert.strictEqual(res.body.inflowRate, 500);
+    });
+});
+
+test('Volunteer Status Enum Validation', async (t) => {
+    await t.test('POST /api/volunteers/:id/status - rejects invalid status enum', async () => {
+        const res = await makeRequest('POST', '/api/volunteers/vol-2/status', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            status: 'hacking',
+            location: 'Gate Z'
+        });
+        assert.strictEqual(res.statusCode, 400);
+        assert.ok(res.body.message.includes('must be one of'));
+    });
+
+    await t.test('POST /api/volunteers/:id/status - accepts valid status enum', async () => {
+        const res = await makeRequest('POST', '/api/volunteers/vol-2/status', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            status: 'standby',
+            location: 'Gate A'
+        });
+        assert.strictEqual(res.statusCode, 200);
+        assert.strictEqual(res.body.status, 'standby');
+    });
+});
+
+test('Extended Security Headers Verification', async (t) => {
+    await t.test('GET / - returns HSTS and Referrer-Policy headers', async () => {
+        const res = await makeRequest('GET', '/');
+        assert.strictEqual(res.headers['strict-transport-security'], 'max-age=31536000; includeSubDomains');
+        assert.strictEqual(res.headers['referrer-policy'], 'strict-origin-when-cross-origin');
+        assert.ok(res.headers['permissions-policy']);
+    });
+});
+
+test('XSS Input Sanitization', async (t) => {
+    await t.test('POST /api/volunteers/:id/status - sanitizes location input', async () => {
+        const res = await makeRequest('POST', '/api/volunteers/vol-3/status', {
+            'Authorization': `Bearer ${token}`
+        }, {
+            status: 'busy',
+            location: '<script>alert("xss")</script>'
+        });
+        assert.strictEqual(res.statusCode, 200);
+        // Verify HTML entities are escaped
+        assert.ok(!res.body.location.includes('<script>'));
+        assert.ok(res.body.location.includes('&lt;'));
+    });
+});
+
