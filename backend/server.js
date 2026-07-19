@@ -24,7 +24,13 @@ app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com data:; connect-src 'self' http://localhost:8080 http://localhost:8081 https://oauth2.googleapis.com https://daily-cloudcode-pa.googleapis.com; img-src 'self' data: https:;");
+    res.setHeader('Content-Security-Policy', 
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com data:; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; " +
+        "font-src 'self' https://fonts.gstatic.com https://unpkg.com data:; " +
+        "connect-src 'self' https://unpkg.com http://localhost:8080 http://localhost:8081 https://oauth2.googleapis.com https://daily-cloudcode-pa.googleapis.com; " +
+        "img-src 'self' data: https:;"
+    );
     next();
 });
 

@@ -158,9 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let resizeTimeout;
 
     // --- API CLIENT CONFIGURATION & HELPERS ---
-    const API_BASE = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1") || window.location.origin.includes("8080")
-        ? `${window.location.origin}/api`
-        : "http://localhost:8080/api";
+    // Dynamically resolves relative to the current window host origin.
+    // This supports local development (localhost) and production (Render/Netlify) without hardcoding credentials.
+    const API_BASE = `${window.location.origin}/api`;
 
     let authToken = sessionStorage.getItem("arena_auth_token") || null;
     let backendActive = false;
