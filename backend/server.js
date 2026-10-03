@@ -425,6 +425,9 @@ app.post('/api/incidents/:id/resolve', authenticateToken, (req, res) => {
     incidents.splice(idx, 1);
     res.json({ message: 'Incident resolved successfully.', incidentId: id });
 });
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 
 // GET Volunteers
 app.get('/api/volunteers', authenticateToken, (req, res) => {
